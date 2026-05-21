@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+
+{% block title %}Pay Fine - Library Management System{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h2>Pay Fine</h2>
+    
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="fine-info">
+        <h3>Fine Details</h3>
+        <p><strong>Student:</strong> {{ fine.issue_book.student.user.username }}</p>
+        <p><strong>Book:</strong> {{ fine.issue_book.book.title }}</p>
+        <p><strong>Issue Date:</strong> {{ fine.issue_book.issue_date }}</p>
+        <p><strong>Return Date:</strong> {{ fine.issue_book.return_date }}</p>
+        <p><strong>Days Late:</strong> {{ days_late }}</p>
+        <p class="fine-amount"><strong>Fine Amount:</strong> Rs. {{ fine.fine_amount }}</p>
+    </div>
+
+    <form method="post" class="form">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="id_student">{{ form.student.label }}</label>
+            {{ form.student }}
+        </div>
+
+        <div class="form-group">
+            <label for="id_book">{{ form.book.label }}</label>
+            {{ form.book }}
+        </div>
+
+        <div class="form-group">
+            <label for="id_fine_amount">{{ form.fine_amount.label }}</label>
+            {{ form.fine_amount }}
+        </div>
+
+        <div class="form-group">
+            <label for="id_fine_paid">{{ form.fine_paid.label }} *</label>
+            {{ form.fine_paid }}
+            {% if form.fine_paid.errors %}
+                <span class="error-text">{{ form.fine_paid.errors }}</span>
+            {% endif %}
+            <small>Enter the amount paid. It must be equal to or greater than the fine amount.</small>
+        </div>
+
+        <div class="form-group">
+            <label for="id_remarks">{{ form.remarks.label }}</label>
+            {{ form.remarks }}
+        </div>
+
+        {% if form.non_field_errors %}
+        <div class="alert alert-error">
+            {% for error in form.non_field_errors %}
+                <p>{{ error }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <button type="submit" class="btn btn-success">Confirm Payment</button>
+        <a href="{% url 'book_list' %}" class="btn">Cancel</a>
+    </form>
+</div>
+
+<style>
+.form-container {
+    max-width: 600px;
+    margin: 30px auto;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.fine-info {
+    background-color: #fff3cd;
+    border: 1px solid #ffc107;
+    padding: 15px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.fine-info h3 {
+    margin-top: 0;
+    color: #856404;
+}
+
+.fine-info p {
+    margin: 8px 0;
+    color: #856404;
+}
+
+.fine-amount {
+    font-size: 18px;
+    color: #e74c3c;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #2c3e50;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #bdc3c7;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.form-group input[disabled] {
+    background-color: #ecf0f1;
+    cursor: not-allowed;
+}
+
+.form-group small {
+    display: block;
+    margin-top: 5px;
+    color: #7f8c8d;
+    font-size: 12px;
+}
+
+.error-text {
+    color: #e74c3c;
+    font-size: 12px;
+    display: block;
+    margin-top: 5px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    margin-right: 10px;
+    border-radius: 4px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+}
+</style>
+{% endblock %}

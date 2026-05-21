@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+
+{% block title %}Return Book - Library Management System{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h2>Return Book</h2>
+    
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <form method="post" class="form">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="id_book">{{ form.book.label }}</label>
+            {{ form.book }}
+            {% if form.book.errors %}
+                <span class="error-text">{{ form.book.errors }}</span>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_author">{{ form.author.label }}</label>
+            {{ form.author }}
+            <small>Author name will be auto-populated and is non-editable.</small>
+        </div>
+
+        <div class="form-group">
+            <label for="id_serial_no">{{ form.serial_no.label }} *</label>
+            {{ form.serial_no }}
+            {% if form.serial_no.errors %}
+                <span class="error-text">{{ form.serial_no.errors }}</span>
+            {% endif %}
+            <small>Serial number is mandatory.</small>
+        </div>
+
+        <div class="form-group">
+            <label for="id_issue_date">{{ form.issue_date.label }}</label>
+            {{ form.issue_date }}
+            <small>Issue date is auto-populated and non-editable.</small>
+        </div>
+
+        <div class="form-group">
+            <label for="id_return_date">{{ form.return_date.label }}</label>
+            {{ form.return_date }}
+            <small>Can be edited earlier or later than the original issue date.</small>
+        </div>
+
+        {% if form.non_field_errors %}
+        <div class="alert alert-error">
+            {% for error in form.non_field_errors %}
+                <p>{{ error }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <button type="submit" class="btn btn-success">Return Book</button>
+        <a href="{% url 'book_list' %}" class="btn">Cancel</a>
+    </form>
+</div>
+
+<style>
+.form-container {
+    max-width: 600px;
+    margin: 30px auto;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #2c3e50;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #bdc3c7;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.form-group input[readonly] {
+    background-color: #ecf0f1;
+    cursor: not-allowed;
+}
+
+.form-group small {
+    display: block;
+    margin-top: 5px;
+    color: #7f8c8d;
+    font-size: 12px;
+}
+
+.error-text {
+    color: #e74c3c;
+    font-size: 12px;
+    display: block;
+    margin-top: 5px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    margin-right: 10px;
+    border-radius: 4px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const bookSelect = document.getElementById('id_book');
+    const authorInput = document.getElementById('id_author');
+
+    // Auto-populate author when book is selected
+    bookSelect.addEventListener('change', function() {
+        const selectedOption = this.options[this.selectedIndex];
+        const authorText = selectedOption.text;
+        
+        // Extract author name from option text
+        if (authorText.includes(' - ')) {
+            const author = authorText.split(' - ')[1];
+            authorInput.value = author;
+        }
+    });
+});
+</script>
+{% endblock %}

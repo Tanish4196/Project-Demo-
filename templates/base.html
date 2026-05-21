@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Library Management System{% endblock %}</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <nav>
+        <h1>Library Management System</h1>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/books/">Books</a></li>
+            <li><a href="/admin/">Admin</a></li>
+        </ul>
+    </nav>
+    
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    
+    <footer>
+        <p>&copy; 2026 Library Management System. All rights reserved.</p>
+    </footer>
+    
+    <script src="/static/script.js"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
